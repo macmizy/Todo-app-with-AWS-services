@@ -1,7 +1,7 @@
 import React, { useState } from "react";
 import { Todo } from "./Todo";
 import { TodoForm } from "./TodoForm";
-import { v4 as uuidv4 } from "uuid";
+import { uuid } from "uuidv4";
 import { EditTodoForm } from "./EditTodoForm";
 
 export const TodoWrapper = () => {
@@ -10,7 +10,7 @@ export const TodoWrapper = () => {
   const addTodo = (todo) => {
     setTodos([
       ...todos,
-      { id: uuidv4(), task: todo, completed: false, isEditing: false },
+      { id: uuid(), task: todo, completed: false, isEditing: false },
     ]);
   }
 

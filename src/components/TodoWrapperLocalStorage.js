@@ -1,9 +1,9 @@
 import React, {useState, useEffect} from 'react'
 import { TodoForm } from './TodoForm'
-import { v4 as uuidv4 } from 'uuid';
+import { uuid } from 'uuidv4';
 import { Todo } from './Todo';
 import { EditTodoForm } from './EditTodoForm';
-uuidv4();
+uuid();
 
 export const TodoWrapperLocalStorage = () => {
     const [todos, setTodos] = useState([])
@@ -14,7 +14,7 @@ export const TodoWrapperLocalStorage = () => {
     }, []);
 
     const addTodo = todo => {
-        const newTodos = [...todos, {id: uuidv4(), task: todo, completed: false, isEditing: false}];
+        const newTodos = [...todos, {id: uuid(), task: todo, completed: false, isEditing: false}];
         setTodos(newTodos);
         localStorage.setItem('todos', JSON.stringify(newTodos));
     }
