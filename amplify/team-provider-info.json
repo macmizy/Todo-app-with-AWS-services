@@ -17,6 +17,9 @@
           "appId": "d23zz4t33pysc7",
           "type": "cicd"
         }
+      },
+      "auth": {
+        "todolistapp8ec71b25": {}
       }
     }
   }
