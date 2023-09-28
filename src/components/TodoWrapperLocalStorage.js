@@ -3,7 +3,8 @@ import { TodoForm } from './TodoForm'
 import { uuid } from 'uuidv4';
 import { Todo } from './Todo';
 import { EditTodoForm } from './EditTodoForm';
-uuid();
+
+const generateRandomId = require('./idGen');
 
 export const TodoWrapperLocalStorage = () => {
     const [todos, setTodos] = useState([])
@@ -14,7 +15,7 @@ export const TodoWrapperLocalStorage = () => {
     }, []);
 
     const addTodo = todo => {
-        const newTodos = [...todos, {id: uuid(), task: todo, completed: false, isEditing: false}];
+        const newTodos = [...todos, {id: generateRandomId(10), task: todo, completed: false, isEditing: false}];
         setTodos(newTodos);
         localStorage.setItem('todos', JSON.stringify(newTodos));
     }

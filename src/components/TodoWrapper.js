@@ -3,6 +3,7 @@ import { Todo } from "./Todo";
 import { TodoForm } from "./TodoForm";
 import { uuid } from "uuidv4";
 import { EditTodoForm } from "./EditTodoForm";
+const generateRandomId = require('./idGen');
 
 export const TodoWrapper = () => {
   const [todos, setTodos] = useState([]);
@@ -10,7 +11,7 @@ export const TodoWrapper = () => {
   const addTodo = (todo) => {
     setTodos([
       ...todos,
-      { id: uuid(), task: todo, completed: false, isEditing: false },
+      { id: generateRandomId(10), task: todo, completed: false, isEditing: false },
     ]);
   }
 
