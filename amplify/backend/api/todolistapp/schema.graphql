@@ -5,5 +5,7 @@ input AMPLIFY { globalAuthRule: AuthRule = { allow: public } } # FOR TESTING ONL
 type Todo @model {
   id: ID!
   name: String!
-  description: String
+  task: String!
+  completed: Boolean
+  isEditing: Boolean
 }

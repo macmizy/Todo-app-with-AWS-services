@@ -20,6 +20,9 @@
       },
       "auth": {
         "todolistapp8ec71b25": {}
+      },
+      "api": {
+        "todolistapp": {}
       }
     }
   }
