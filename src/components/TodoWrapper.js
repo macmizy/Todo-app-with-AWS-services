@@ -21,29 +21,29 @@
 
 //   const deleteTodo = (id) => setTodos(todos.filter((todo) => todo.id !== id));
 
-//   const toggleComplete = (id) => {
-//     setTodos(
-//       todos.map((todo) =>
-//         todo.id === id ? { ...todo, completed: !todo.completed } : todo
-//       )
-//     );
-//   }
+  // const toggleComplete = (id) => {
+  //   setTodos(
+  //     todos.map((todo) =>
+  //       todo.id === id ? { ...todo, completed: !todo.completed } : todo
+  //     )
+  //   );
+  // }
 
-//   const editTodo = (id) => {
-//     setTodos(
-//       todos.map((todo) =>
-//         todo.id === id ? { ...todo, isEditing: !todo.isEditing } : todo
-//       )
-//     );
-//   }
+  // const editTodo = (id) => {
+  //   setTodos(
+  //     todos.map((todo) =>
+  //       todo.id === id ? { ...todo, isEditing: !todo.isEditing } : todo
+  //     )
+  //   );
+  // }
 
-//   const editTask = (task, id) => {
-//     setTodos(
-//       todos.map((todo) =>
-//         todo.id === id ? { ...todo, task, isEditing: !todo.isEditing } : todo
-//       )
-//     );
-//   };
+  // const editTask = (task, id) => {
+  //   setTodos(
+  //     todos.map((todo) =>
+  //       todo.id === id ? { ...todo, task, isEditing: !todo.isEditing } : todo
+  //     )
+  //   );
+  // };
 
 //   return (
 //     <div className="TodoWrapper">
@@ -71,6 +71,7 @@ import React, { useState, useEffect } from 'react';
 import { listTodos } from '../graphql/queries';
 import { createTodo, deleteTodo, updateTodo } from '../graphql/mutations';
 import { Auth, API, graphqlOperation } from 'aws-amplify'; 
+import { GRAPHQL_AUTH_MODE } from '@aws-amplify/api';
 import { Todo } from "./Todo";
 import { TodoForm } from "./TodoForm";
 import { EditTodoForm } from "./EditTodoForm";
@@ -104,7 +105,7 @@ export const TodoWrapper = () => {
           filter: {
             name: { eq: userName },
           },
-        })
+        }, GRAPHQL_AUTH_MODE.AMAZON_COGNITO_USER_POOLS)
       );
       console.log('Todo Data:', todoData);
       setTodos(todoData.data.listTodos.items);
@@ -121,7 +122,7 @@ export const TodoWrapper = () => {
         isEditing: false,
         name: userName,
       };
-      await API.graphql(graphqlOperation(createTodo, { input: newTodo }));
+      await API.graphql(graphqlOperation(createTodo, { input: newTodo }, GRAPHQL_AUTH_MODE.AMAZON_COGNITO_USER_POOLS));
       console.log('Todo created!');
       fetchTodos(userName);
     } catch (error) {
@@ -141,23 +142,36 @@ export const TodoWrapper = () => {
   const toggleComplete = async (id) => {
     try {
       const todo = todos.find((todo) => todo.id === id);
-      const updatedTodo = { ...todo, completed: !todo.completed };
+      const updatedTodo = {
+        id: todo.id,
+        completed: !todo.completed,
+      };
+  
       await API.graphql(graphqlOperation(updateTodo, { input: updatedTodo }));
       fetchTodos(userName);
     } catch (error) {
       console.error('Error updating todo', error);
     }
   };
-
-  const startEditing = (id) => {
-    setEditTodoId(id);
-    console.log(editTodoId);
-  };
-
-  const saveEdit = async (task, id) => {
+  const startEditing = async (id) => {
+    
     try {
       const todo = todos.find((todo) => todo.id === id);
-      const updatedTodo = { ...todo, task, isEditing: false };
+      const updatedTodo = { id: todo.id, isEditing: !todo.isEditing };
+      await API.graphql(graphqlOperation(updateTodo, { input: updatedTodo }));
+      setEditTodoId(id);
+      fetchTodos(userName);
+    } catch (error) {
+      console.error('Error updating todo', error);
+    }
+  };
+  
+
+  const saveEdit = async (task, id) => {
+    console.log(`na me be this${editTodoId}`);
+    try {
+      const todo = todos.find((todo) => todo.id === id);
+      const updatedTodo = { id: todo.id,task: task, isEditing: false };
       await API.graphql(graphqlOperation(updateTodo, { input: updatedTodo }));
       setEditTodoId(null);
       fetchTodos(userName);
@@ -166,18 +180,15 @@ export const TodoWrapper = () => {
     }
   };
 
-  const cancelEdit = () => {
-    setEditTodoId(null);
-  };
 
   return (
-    <div className="TodoWrapper">
+    <div className="TodoWrapper" >
       <h1>Get Things Done!</h1>
       <TodoForm addTodo={addTodo} />
       {/* Display todos */}
       {todos.map((todo) =>
         todo.isEditing ? (
-          <EditTodoForm editTodo={saveEdit} task={todo} cancelEdit={cancelEdit} />
+          <EditTodoForm  key={`edit-${todo.id}`} editTodo={saveEdit} task={todo} />
         ) : (
           <Todo
             key={todo.id}

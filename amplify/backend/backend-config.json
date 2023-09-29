@@ -1,6 +1,7 @@
 {
   "api": {
-    "todolistapp": {
+    "AdminQueries": {
+      "authorizationType": "AMAZON_COGNITO_USER_POOLS",
       "dependsOn": [
         {
           "attributes": [
@@ -8,16 +9,31 @@
           ],
           "category": "auth",
           "resourceName": "todolistapp8ec71b25"
+        },
+        {
+          "attributes": [
+            "Arn",
+            "Name"
+          ],
+          "category": "function",
+          "resourceName": "AdminQueries0b1a5d70"
         }
       ],
+      "providerPlugin": "awscloudformation",
+      "service": "API Gateway"
+    },
+    "todolistapp": {
+      "dependsOn": [],
       "output": {
         "authConfig": {
           "additionalAuthenticationProviders": [],
           "defaultAuthentication": {
-            "authenticationType": "AMAZON_COGNITO_USER_POOLS",
-            "userPoolConfig": {
-              "userPoolId": "authtodolistapp8ec71b25"
-            }
+            "apiKeyConfig": {
+              "apiKeyExpirationDate": "2023-10-06T06:18:37.597Z",
+              "apiKeyExpirationDays": 7,
+              "description": "MyappsyncAPI"
+            },
+            "authenticationType": "API_KEY"
           }
         }
       },
@@ -52,6 +68,38 @@
       },
       "providerPlugin": "awscloudformation",
       "service": "Cognito"
+    },
+    "userPoolGroups": {
+      "dependsOn": [
+        {
+          "attributes": [
+            "UserPoolId",
+            "AppClientIDWeb",
+            "AppClientID",
+            "IdentityPoolId"
+          ],
+          "category": "auth",
+          "resourceName": "todolistapp8ec71b25"
+        }
+      ],
+      "providerPlugin": "awscloudformation",
+      "service": "Cognito-UserPool-Groups"
+    }
+  },
+  "function": {
+    "AdminQueries0b1a5d70": {
+      "build": true,
+      "dependsOn": [
+        {
+          "attributes": [
+            "UserPoolId"
+          ],
+          "category": "auth",
+          "resourceName": "todolistapp8ec71b25"
+        }
+      ],
+      "providerPlugin": "awscloudformation",
+      "service": "Lambda"
     }
   },
   "hosting": {
@@ -62,6 +110,22 @@
     }
   },
   "parameters": {
+    "AMPLIFY_function_AdminQueries0b1a5d70_deploymentBucketName": {
+      "usedBy": [
+        {
+          "category": "function",
+          "resourceName": "AdminQueries0b1a5d70"
+        }
+      ]
+    },
+    "AMPLIFY_function_AdminQueries0b1a5d70_s3Key": {
+      "usedBy": [
+        {
+          "category": "function",
+          "resourceName": "AdminQueries0b1a5d70"
+        }
+      ]
+    },
     "AMPLIFY_hosting_amplifyhosting_appId": {
       "usedBy": [
         {

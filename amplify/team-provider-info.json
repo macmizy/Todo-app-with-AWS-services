@@ -19,10 +19,18 @@
         }
       },
       "auth": {
-        "todolistapp8ec71b25": {}
+        "todolistapp8ec71b25": {},
+        "userPoolGroups": {}
       },
       "api": {
-        "todolistapp": {}
+        "todolistapp": {},
+        "AdminQueries": {}
+      },
+      "function": {
+        "AdminQueries0b1a5d70": {
+          "deploymentBucketName": "amplify-todolistapp-dev-223635-deployment",
+          "s3Key": "amplify-builds/AdminQueries0b1a5d70-38767a6f363730456555-build.zip"
+        }
       }
     }
   }
